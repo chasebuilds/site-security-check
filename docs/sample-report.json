@@ -1,0 +1,156 @@
+{
+  "target": "Sample: local test server built to be weak",
+  "scanned_at": "2026-11-21T19:29:14Z",
+  "score": 21,
+  "grade": "F",
+  "requests_made": 10,
+  "notes": [
+    "This is a sample report. It was made against a local test server on the author's machine, not against a real website."
+  ],
+  "findings": [
+    {
+      "id": "https-redirect",
+      "title": "Visitors are sent to the secure (HTTPS) version",
+      "status": "info",
+      "weight": 15,
+      "summary": "Nothing answers on plain http:// (port closed). That is fine unless customers type http:// addresses.",
+      "meaning": "If someone types your address without https, they should be moved to the secure version automatically. Without that, their traffic can be read or changed on public Wi-Fi.",
+      "fix": "Turn on 'Force HTTPS' in your host or CDN, or add a permanent (301) redirect from http:// to https:// in your web server settings."
+    },
+    {
+      "id": "tls-certificate",
+      "title": "Security certificate is valid and not about to expire",
+      "status": "pass",
+      "weight": 15,
+      "summary": "Issued by Test CA, expires 2027-02-19 (89 days left), TLSv1.3.",
+      "meaning": "The certificate is what makes the padlock work. An expired or untrusted one makes browsers show a scary full-page warning and most customers leave.",
+      "fix": "Renew the certificate. Most hosts renew free certificates (Let's Encrypt) automatically; check that auto-renewal is switched on."
+    },
+    {
+      "id": "hsts",
+      "title": "Browsers are told to always use HTTPS (HSTS)",
+      "status": "warn",
+      "weight": 8,
+      "summary": "HSTS is set but max-age=300 is under 180 days.",
+      "meaning": "The Strict-Transport-Security header tells browsers to refuse the insecure version of your site for a set time, which blocks downgrade tricks.",
+      "fix": "Add the header 'Strict-Transport-Security: max-age=31536000; includeSubDomains' once every page and subdomain works over HTTPS."
+    },
+    {
+      "id": "csp",
+      "title": "Content Security Policy limits what the page can load",
+      "status": "fail",
+      "weight": 10,
+      "summary": "No Content-Security-Policy header.",
+      "meaning": "A Content Security Policy lists where scripts and images may come from. It is the main defence that stops injected scripts from stealing data.",
+      "fix": "Start with a report-only policy, then enforce one such as \"default-src 'self'\". Avoid 'unsafe-inline' and '*' where you can."
+    },
+    {
+      "id": "framing",
+      "title": "Other sites cannot put yours inside a hidden frame",
+      "status": "fail",
+      "weight": 6,
+      "summary": "Neither X-Frame-Options nor CSP frame-ancestors is set.",
+      "meaning": "Without frame protection, another site can show your page invisibly under a fake button and trick visitors into clicking it (clickjacking).",
+      "fix": "Send 'X-Frame-Options: SAMEORIGIN' or a CSP rule 'frame-ancestors 'self''."
+    },
+    {
+      "id": "nosniff",
+      "title": "Browsers are told not to guess file types",
+      "status": "pass",
+      "weight": 5,
+      "summary": "X-Content-Type-Options: nosniff.",
+      "meaning": "Without X-Content-Type-Options, some browsers may treat an uploaded file as a script and run it.",
+      "fix": "Send the header 'X-Content-Type-Options: nosniff'."
+    },
+    {
+      "id": "referrer-policy",
+      "title": "Private page addresses are not leaked to other sites",
+      "status": "fail",
+      "weight": 4,
+      "summary": "No Referrer-Policy header.",
+      "meaning": "Without a Referrer-Policy, the full address of the page a visitor came from (which can include private details) may be passed to every site you link to.",
+      "fix": "Send 'Referrer-Policy: strict-origin-when-cross-origin'."
+    },
+    {
+      "id": "permissions-policy",
+      "title": "Browser features such as camera and location are restricted",
+      "status": "fail",
+      "weight": 3,
+      "summary": "No Permissions-Policy header.",
+      "meaning": "A Permissions-Policy switches off browser features your site does not use, so a compromised script cannot turn them on.",
+      "fix": "Send 'Permissions-Policy: camera=(), microphone=(), geolocation=()' and allow only what you need."
+    },
+    {
+      "id": "cookies",
+      "title": "Cookies carry the right protection flags",
+      "status": "fail",
+      "weight": 8,
+      "summary": "1 cookie(s) set. session lacks HttpOnly, SameSite",
+      "meaning": "Secure keeps a cookie off insecure connections, HttpOnly hides it from page scripts, and SameSite limits cross-site use. Missing flags make login cookies easier to steal.",
+      "fix": "In your site or framework settings turn on Secure, HttpOnly and SameSite=Lax (or Strict) for session and login cookies."
+    },
+    {
+      "id": "server-banner",
+      "title": "Server does not announce its software version",
+      "status": "fail",
+      "weight": 4,
+      "summary": "Software details are visible: Server: Apache/2.4.29 (Ubuntu)",
+      "meaning": "Headers such as 'Server: Apache/2.2.15' tell attackers exactly which known bugs to try.",
+      "fix": "Hide or shorten the banner (for example 'ServerTokens Prod' in Apache or 'server_tokens off' in nginx) and remove X-Powered-By."
+    },
+    {
+      "id": "mixed-content",
+      "title": "Secure pages do not load insecure files",
+      "status": "fail",
+      "weight": 8,
+      "summary": "1 script/style/frame and 1 image/media link(s): http://cdn.example.test/a.js, http://cdn.example.test/p.png",
+      "meaning": "A secure page that pulls in scripts, styles or images over plain http:// can be tampered with on the way, and browsers may block or warn about it.",
+      "fix": "Change those http:// links to https:// (or to relative links). Check your page builder, theme and any hard-coded addresses."
+    },
+    {
+      "id": "cms-version",
+      "title": "Site software is not announcing an old version",
+      "status": "fail",
+      "weight": 6,
+      "summary": "Generator tag says 'WordPress 5.2.4', older than 6.0.",
+      "meaning": "Many sites say which CMS and version built them in a hidden tag. An old version usually has published security holes.",
+      "fix": "Update the CMS, themes and plugins to the latest release, then remove the generator tag (most CMSs have a setting or a one-line filter for this)."
+    },
+    {
+      "id": "exposed-files",
+      "title": "Private files are not downloadable",
+      "status": "fail",
+      "weight": 20,
+      "summary": "Reachable from the internet: /.env",
+      "meaning": "Files such as .env, .git or backup copies of config files can hold passwords and source code. If a request for them succeeds, anyone can fetch them.",
+      "fix": "Remove the file from the public web folder, or block it in the server config, and then change any password or key that was inside it."
+    },
+    {
+      "id": "security-txt",
+      "title": "A security contact is published (security.txt)",
+      "status": "warn",
+      "weight": 2,
+      "summary": "No security.txt with a Contact line found.",
+      "meaning": "A small file at /.well-known/security.txt tells researchers where to report a problem privately instead of posting it or ignoring it.",
+      "fix": "Create /.well-known/security.txt with a 'Contact:' line (an email or form) and an 'Expires:' date. securitytxt.org has a generator."
+    },
+    {
+      "id": "spf",
+      "title": "Email: SPF record limits who can send as your domain",
+      "status": "pass",
+      "weight": 5,
+      "summary": "SPF found with soft fail (~all): v=spf1 include:mail.example.test ~all",
+      "meaning": "SPF lists the servers allowed to send email for your domain. Without it, scammers can send mail that looks like it came from you.",
+      "fix": "Add a TXT record such as 'v=spf1 include:<your mail provider> -all'. Your email provider documents the exact value."
+    },
+    {
+      "id": "dmarc",
+      "title": "Email: DMARC record tells receivers what to do with fakes",
+      "status": "fail",
+      "weight": 5,
+      "summary": "No DMARC record found at _dmarc.example.test.",
+      "meaning": "DMARC tells other mail systems to reject or quarantine mail that fails SPF/DKIM checks, which stops most look-alike emails.",
+      "fix": "Add a TXT record at _dmarc.<your domain>, starting with 'v=DMARC1; p=none; rua=mailto:<you>' to watch, then move to p=quarantine and later p=reject."
+    }
+  ]
+}

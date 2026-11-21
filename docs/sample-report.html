@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Website security checkup: Sample: local test server built to be weak</title>
+<style>
+:root{--ink:#2a2019;--ink2:rgba(42,32,25,.68);--card:rgba(255,252,248,.62);--edge:rgba(255,255,255,.6);
+--glass:rgba(255,250,244,.3);--shadow:rgba(70,40,20,.22);--good:#1f7a5a;--bad:#b23a22;--warn:#9a5d08;
+--gbg:rgba(31,154,114,.15);--bbg:rgba(226,88,58,.15);--wbg:rgba(200,130,20,.16);--nbg:rgba(42,32,25,.08)}
+@media(prefers-color-scheme:dark){:root{--ink:#f6ece2;--ink2:rgba(246,236,226,.72);--card:rgba(48,36,28,.6);
+--edge:rgba(255,255,255,.14);--glass:rgba(34,24,18,.4);--shadow:rgba(0,0,0,.5);--good:#4fd1a1;--bad:#ff8a6a;
+--warn:#f0b45a;--gbg:rgba(79,209,161,.16);--bbg:rgba(255,122,85,.18);--wbg:rgba(240,180,90,.17);
+--nbg:rgba(246,236,226,.1)}}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;color:var(--ink);font:15px/1.55 "Segoe UI",system-ui,sans-serif;
+background:radial-gradient(60% 50% at 80% 8%,#fff3dc 0,transparent 70%),
+linear-gradient(180deg,#e9ddcf,#cdb9a3 70%,#b89a80)}
+@media(prefers-color-scheme:dark){body{background:radial-gradient(60% 50% at 80% 8%,#6b4420 0,transparent 70%),
+linear-gradient(180deg,#3b2c22,#2a1f19 70%,#241a14)}}
+main{max-width:860px;margin:0 auto;padding:20px 16px 60px}
+.bar{display:inline-flex;gap:10px;align-items:center;padding:8px 16px;border-radius:999px;font-size:13px;
+background:var(--glass);border:1px solid var(--edge);backdrop-filter:blur(22px) saturate(150%);
+-webkit-backdrop-filter:blur(22px) saturate(150%);margin-bottom:16px}
+.panel{background:var(--glass);border:1px solid var(--edge);border-radius:28px;padding:clamp(18px,3vw,30px);
+backdrop-filter:blur(26px) saturate(150%);-webkit-backdrop-filter:blur(26px) saturate(150%);
+box-shadow:0 24px 60px -20px var(--shadow)}
+h1{margin:0 0 4px;font-size:clamp(22px,3.4vw,30px);letter-spacing:-.02em}
+h2{margin:28px 0 10px;font-size:15px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink2)}
+.top{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.grade{width:92px;height:92px;border-radius:50%;display:grid;place-items:center;font-size:46px;font-weight:700;
+background:var(--card);border:1px solid var(--edge)}
+.g-A,.g-B{color:var(--good)}.g-C,.g-D{color:var(--warn)}.g-F{color:var(--bad)}
+.muted{color:var(--ink2)}
+.card{background:var(--card);border:1px solid var(--edge);border-radius:18px;padding:14px 16px;margin:0 0 10px}
+.card h3{margin:0 0 4px;font-size:16px}
+.pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 10px;border-radius:999px;margin-right:8px;
+vertical-align:2px}
+.fail{background:var(--bbg);color:var(--bad)}.warn{background:var(--wbg);color:var(--warn)}
+.pass{background:var(--gbg);color:var(--good)}.info,.skipped{background:var(--nbg);color:var(--ink2)}
+.card p{margin:6px 0 0}.card b{font-weight:600}
+.saw{font-family:ui-monospace,"Cascadia Mono",monospace;font-size:13px;overflow-wrap:anywhere}
+footer{margin-top:22px;font-size:13px;color:var(--ink2)}
+</style></head><body><main>
+<div class="bar">Website security checkup &middot; 2026-11-21T19:29:14Z</div>
+<div class="panel">
+<div class="top"><div class="grade g-F">F</div>
+<div><h1>Sample: local test server built to be weak</h1>
+<div class="muted">Score 21 out of 100. 10 to fix,
+2 to improve, 3 fine. 10 requests made.</div></div></div>
+<p class='muted'>This is a sample report. It was made against a local test server on the author&#x27;s machine, not against a real website.</p><h2>Fix these first (10)</h2><div class="card"><h3><span class="pill fail">Fix</span>Content Security Policy limits what the page can load</h3><p class="saw">No Content-Security-Policy header.</p><p><b>What it means:</b> A Content Security Policy lists where scripts and images may come from. It is the main defence that stops injected scripts from stealing data.</p><p><b>How to fix it:</b> Start with a report-only policy, then enforce one such as &quot;default-src &#x27;self&#x27;&quot;. Avoid &#x27;unsafe-inline&#x27; and &#x27;*&#x27; where you can.</p></div><div class="card"><h3><span class="pill fail">Fix</span>Other sites cannot put yours inside a hidden frame</h3><p class="saw">Neither X-Frame-Options nor CSP frame-ancestors is set.</p><p><b>What it means:</b> Without frame protection, another site can show your page invisibly under a fake button and trick visitors into clicking it (clickjacking).</p><p><b>How to fix it:</b> Send &#x27;X-Frame-Options: SAMEORIGIN&#x27; or a CSP rule &#x27;frame-ancestors &#x27;self&#x27;&#x27;.</p></div><div class="card"><h3><span class="pill fail">Fix</span>Private page addresses are not leaked to other sites</h3><p class="saw">No Referrer-Policy header.</p><p><b>What it means:</b> Without a Referrer-Policy, the full address of the page a visitor came from (which can include private details) may be passed to every site you link to.</p><p><b>How to fix it:</b> Send &#x27;Referrer-Policy: strict-origin-when-cross-origin&#x27;.</p></div><div class="card"><h3><span class="pill fail">Fix</span>Browser features such as camera and location are restricted</h3><p class="saw">No Permissions-Policy header.</p><p><b>What it means:</b> A Permissions-Policy switches off browser features your site does not use, so a compromised script cannot turn them on.</p><p><b>How to fix it:</b> Send &#x27;Permissions-Policy: camera=(), microphone=(), geolocation=()&#x27; and allow only what you need.</p></div><div class="card"><h3><span class="pill fail">Fix</span>Cookies carry the right protection flags</h3><p class="saw">1 cookie(s) set. session lacks HttpOnly, SameSite</p><p><b>What it means:</b> Secure keeps a cookie off insecure connections, HttpOnly hides it from page scripts, and SameSite limits cross-site use. Missing flags make login cookies easier to steal.</p><p><b>How to fix it:</b> In your site or framework settings turn on Secure, HttpOnly and SameSite=Lax (or Strict) for session and login cookies.</p></div><div class="card"><h3><span class="pill fail">Fix</span>Server does not announce its software version</h3><p class="saw">Software details are visible: Server: Apache/2.4.29 (Ubuntu)</p><p><b>What it means:</b> Headers such as &#x27;Server: Apache/2.2.15&#x27; tell attackers exactly which known bugs to try.</p><p><b>How to fix it:</b> Hide or shorten the banner (for example &#x27;ServerTokens Prod&#x27; in Apache or &#x27;server_tokens off&#x27; in nginx) and remove X-Powered-By.</p></div><div class="card"><h3><span class="pill fail">Fix</span>Secure pages do not load insecure files</h3><p class="saw">1 script/style/frame and 1 image/media link(s): http://cdn.example.test/a.js, http://cdn.example.test/p.png</p><p><b>What it means:</b> A secure page that pulls in scripts, styles or images over plain http:// can be tampered with on the way, and browsers may block or warn about it.</p><p><b>How to fix it:</b> Change those http:// links to https:// (or to relative links). Check your page builder, theme and any hard-coded addresses.</p></div><div class="card"><h3><span class="pill fail">Fix</span>Site software is not announcing an old version</h3><p class="saw">Generator tag says &#x27;WordPress 5.2.4&#x27;, older than 6.0.</p><p><b>What it means:</b> Many sites say which CMS and version built them in a hidden tag. An old version usually has published security holes.</p><p><b>How to fix it:</b> Update the CMS, themes and plugins to the latest release, then remove the generator tag (most CMSs have a setting or a one-line filter for this).</p></div><div class="card"><h3><span class="pill fail">Fix</span>Private files are not downloadable</h3><p class="saw">Reachable from the internet: /.env</p><p><b>What it means:</b> Files such as .env, .git or backup copies of config files can hold passwords and source code. If a request for them succeeds, anyone can fetch them.</p><p><b>How to fix it:</b> Remove the file from the public web folder, or block it in the server config, and then change any password or key that was inside it.</p></div><div class="card"><h3><span class="pill fail">Fix</span>Email: DMARC record tells receivers what to do with fakes</h3><p class="saw">No DMARC record found at _dmarc.example.test.</p><p><b>What it means:</b> DMARC tells other mail systems to reject or quarantine mail that fails SPF/DKIM checks, which stops most look-alike emails.</p><p><b>How to fix it:</b> Add a TXT record at _dmarc.&lt;your domain&gt;, starting with &#x27;v=DMARC1; p=none; rua=mailto:&lt;you&gt;&#x27; to watch, then move to p=quarantine and later p=reject.</p></div><h2>Worth improving (2)</h2><div class="card"><h3><span class="pill warn">Improve</span>Browsers are told to always use HTTPS (HSTS)</h3><p class="saw">HSTS is set but max-age=300 is under 180 days.</p><p><b>What it means:</b> The Strict-Transport-Security header tells browsers to refuse the insecure version of your site for a set time, which blocks downgrade tricks.</p><p><b>How to fix it:</b> Add the header &#x27;Strict-Transport-Security: max-age=31536000; includeSubDomains&#x27; once every page and subdomain works over HTTPS.</p></div><div class="card"><h3><span class="pill warn">Improve</span>A security contact is published (security.txt)</h3><p class="saw">No security.txt with a Contact line found.</p><p><b>What it means:</b> A small file at /.well-known/security.txt tells researchers where to report a problem privately instead of posting it or ignoring it.</p><p><b>How to fix it:</b> Create /.well-known/security.txt with a &#x27;Contact:&#x27; line (an email or form) and an &#x27;Expires:&#x27; date. securitytxt.org has a generator.</p></div><h2>Looking good (3)</h2><div class="card"><h3><span class="pill pass">OK</span>Security certificate is valid and not about to expire</h3><p class="saw">Issued by Test CA, expires 2027-02-19 (89 days left), TLSv1.3.</p></div><div class="card"><h3><span class="pill pass">OK</span>Browsers are told not to guess file types</h3><p class="saw">X-Content-Type-Options: nosniff.</p></div><div class="card"><h3><span class="pill pass">OK</span>Email: SPF record limits who can send as your domain</h3><p class="saw">SPF found with soft fail (~all): v=spf1 include:mail.example.test ~all</p></div><h2>Good to know (1)</h2><div class="card"><h3><span class="pill info">Note</span>Visitors are sent to the secure (HTTPS) version</h3><p class="saw">Nothing answers on plain http:// (port closed). That is fine unless customers type http:// addresses.</p></div>
+<footer>This is a passive checkup: it reads what the site already shows to every visitor. It is not a
+full security audit and cannot see what is behind your login pages or inside your servers.
+A good grade does not mean the site is unhackable; a poor one is a to-do list, not a verdict.
+Made by Chase Builds.</footer>
+</div></main></body></html>

@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "site-security-check"
+version = "0.1.0"
+description = "Passive website security checkup for small businesses. Run only on sites you own or have written permission to check."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Chase Builds" }]
+dependencies = ["dnspython>=2.6"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.6", "mypy>=1.10", "cryptography>=42"]
+
+[project.scripts]
+sitecheck = "sitecheck.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src", "."]
+
+[tool.mypy]
+files = ["src", "tests"]
+python_version = "3.11"
+strict = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests", "examples"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM"]
+
+[tool.ruff.lint.per-file-ignores]
+"src/sitecheck/report.py" = ["E501"]

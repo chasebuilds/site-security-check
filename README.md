@@ -89,3 +89,11 @@ See [LIMITATIONS.md](LIMITATIONS.md). Short version: it reads one homepage and a
 ## License
 
 MIT, Chase Builds.
+
+## More from Chase Builds
+
+- **[pdf-qa-local](https://github.com/chasebuilds/pdf-qa-local)**: Ask questions about your PDFs with AI that runs on your own computer, so documents never leave the office.
+- **[table-export-extension](https://github.com/chasebuilds/table-export-extension)**: Export any web table to Excel. No data leaves the browser. ([live demo](https://chasebuilds.github.io/table-export-extension/))
+- **[pc-build-planner](https://github.com/chasebuilds/pc-build-planner)**: A parts list for an office or CAD workstation where every part fits. ([live demo](https://chasebuilds.github.io/pc-build-planner/))
+
+[All projects, sorted by industry](https://github.com/chasebuilds) · [chasebuilds.github.io](https://chasebuilds.github.io)

@@ -1,0 +1,7 @@
+{
+  "title": "Site Security Check: Passive security checkup for small websites | Chase Builds",
+  "description": "Passive website security checkup for small businesses: headers, TLS, cookies, exposed files and SPF and DMARC, in a plain-English report. Sample report shown.",
+  "url": "https://chasebuilds.github.io/site-security-check/",
+  "image": "docs/screenshot.png",
+  "repo": "site-security-check"
+}
